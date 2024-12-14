@@ -1,21 +1,34 @@
-const RestaurantCard=(props)=>{
-    const {resData}=props;
-    // Destructure properties directly from `resData`
-    const { image, name, description, currency, price, rating, category, availability } = resData || {};
-    return(
-      <div className="res-card" style={{backgroundColor:"#f0f0f0"}}>
-        <img className="res-logo" alt="reslogoo" src={image}></img>
-        
-        <h3>{name}</h3>
-        <h4>{description}</h4>
-        
-        <h4>{rating?.aggregate_rating} star</h4> {/* Extract rating */}
-        <h4>{category}</h4>
-        <h4>{availability?.prep_time}</h4> {/* Access prep_time */}
-        <h4>{currency}{price}</h4> {/* Display price */}
-        
-   </div>
-    );
-  };
+import { imageBaseUrl } from "../utils/constants";
 
-  export default RestaurantCard;
+const RestaurantCard = (props) => {
+  const { resData } = props;
+
+  // Safely destructure properties
+  const {
+    name,
+    cloudinaryImageId,
+    avgRating,
+    cuisines,
+    costForTwo,
+    sla: { deliveryTime } = {},
+  } = resData || {};
+
+  const imageSrc = cloudinaryImageId
+    ? `${imageBaseUrl}${cloudinaryImageId}`
+    : "fallback_image_url_here"; // Add a fallback image URL
+
+  return (
+    <div className="res-card" style={{ backgroundColor: "#f0f0f0" }}>
+      <img className="res-logo" alt={`${name} logo`} src={imageSrc} />
+      <div>
+        <h3>{name || "Restaurant Name"}</h3>
+        <em>{cuisines ? cuisines.join(", ") : "No cuisines available"}</em>
+        <h4>{costForTwo>1000 ? `${costForTwo/100}` : `${costForTwo}`}</h4>
+        <h4>{avgRating ? `${avgRating} stars` : "No rating available"}</h4>
+        <h4>{deliveryTime ? `${deliveryTime} mins` : "Delivery time not available"}</h4>
+      </div>
+    </div>
+  );
+};
+
+export default RestaurantCard;

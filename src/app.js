@@ -70,6 +70,7 @@ import Footer from "./components/Footer";
 
 
 const AppLayout = ()=>{
+  console.log(<Body/>);
   return(
     <div className="app">
       <Header/>
